@@ -1,0 +1,60 @@
+-
+  name: Play to test running powershell Script and installing Applications
+  hosts: windows
+  vars:
+    location: '/home/ansiadmin/testProject/Project4/rename.ps1'
+    firefoxInstaller: 'https://download-installer.cdn.mozilla.net/pub/firefox/releases/89.0.2/win64/en-US/Firefox%20Setup%2089.0.2.msi'
+    installPath: 'C:\Users\admin\Desktop\AnsibleInstallers\'
+  tasks:
+
+    - name: rename computer
+      win_shell: |
+          #-----Variables----
+          $computer = "Kranz-LT-###"
+          $oldname = $env:computername
+          Write-Host "=========== Renaming Computer =========="
+          Rename-Computer -ComputerName $oldname -NewName $computer
+          write-host "Name has been changed to: $computer"
+          write-host
+
+
+    - name: Deletes Chocolatey Apps
+      win_chocolatey:
+        name: '{{item}}'
+        state: absent
+      loop:
+        - firefox
+        - googlechrome
+        - putty.install
+        - notepadplusplus.install
+        - atom
+
+
+    - name: reboot Computer
+      win_reboot:
+        reboot_timeout_sec: 3600
+        connect_timeout_sec: 3600
+        shutdown_timeout_sec: 3600
+
+
+
+    - name: Copy files to windows
+      win_copy:
+        src: /home/ansiadmin/testProject/Akatsuki.txt
+        dest: C:\users\admin\Desktop\Folder1\Folder2\
+
+    - name: Installs Notepad++,Atom, Firefox, Chrome, and Putty
+      win_chocolatey:
+        name: '{{item}}'
+        state: present
+      loop:
+        - notepadplusplus.install
+        - atom
+        - firefox
+        - googlechrome
+        - putty.install
+
+    - name: Upates all Chocolatey installs
+      win_chocolatey:
+        name: all
+        state: latest

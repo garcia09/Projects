@@ -1,0 +1,17 @@
+
+#Hosts
+client1 ansible_host=192.168.68.153 ansible_connection=winrm ansible_user=admin ansible_password=Admin!@#2 ansible_winrm_server_cert_validation=ignore
+client2 ansible_host=192.168.68.154 ansible_connection=winrm ansible_user=admin ansible_password=Admin!@#2 ansible_winrm_server_cert_validation=ignore
+client3 ansible_host=192.168.68.155 ansible_connection=winrm ansible_user=admin ansible_password=Admin!@#2 ansible_winrm_transport=basic ansible_winrm_server_cert_validation=validate ansible_port=5986 ansible_winrm_scheme=https
+client4 ansible_host=192.168.68.157 ansible_connection=winrm ansible_user=admin ansible_password=Client123 ansible_winrm_server_cert_validation=ignore
+
+target3 ansible_host=client@192.168.68.114
+
+[windows]
+client1
+client2
+client3
+client4
+
+[linux]
+target3

@@ -1,0 +1,17 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "192.168.68.31",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "ansiadmin",
+  "password": "Controller123",
+  "watch": [],
+  "transport": "scp"
+}

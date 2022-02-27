@@ -1,0 +1,8 @@
+-
+  name: Copy Files to Linux Servers
+  hosts: group2
+  tasks:
+    - name: Copy Files
+      copy:
+        src: '/home/ansiadmin/Ansible/Kranz/Installers/'
+        dest: '/home/admin/Naruto/Weebs/'

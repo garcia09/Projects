@@ -1,0 +1,40 @@
+-
+  name: Play to test computer setup.
+  hosts: client3
+
+#Variables
+  vars:
+    installers: '/home/ansiadmin/Ansible/Kranz/Installers/'
+    desktop: 'C:\Users\admin\Desktop\Installers'
+  tasks:
+
+    - name: rename computer
+      win_shell: |
+          #-----Variables----
+          $computer = "random"
+          $oldname = $env:computername
+          Write-Host "=========== Renaming Computer =========="
+          Rename-Computer -ComputerName $oldname -NewName $computer
+          write-host "Name has been changed to: $computer"
+          write-host
+#Transfers msi installer to desktop
+#TODO: transfer other Documents
+    - name: Copy files to windows
+      win_copy:
+        src: '{{ installers }}'
+        dest: '{{ desktop }}'
+
+    - name: Install Default Applications
+      win_shell:
+      #  $chromepath = "C:\Users\admin\Desktop\Installers\googlechromestandaloneenterprise64.msi"
+      #  $firefoxpath = "C:\Users\admin\Desktop\Installers\Firefox Setup 97.0.1.msi"
+
+        Write-Host "------------Installing Chrome and Firefox---------"
+        try{
+        Start-Process msiexec.exe -Wait -ArgumentList /I C:\Users\admin\Desktop\Installers\googlechromestandaloneenterprise64 /quiet
+        Start-Process msiexec.exe -Wait -ArgumentList /I C:\Users\admin\Desktop\Installers\Firefox Setup 97.0.1 /quiet
+        }
+        catch
+        {write-host "something went wrong"}
+
+        write-host "Done with Installations"

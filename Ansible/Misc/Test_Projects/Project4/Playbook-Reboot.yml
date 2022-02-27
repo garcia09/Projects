@@ -1,0 +1,23 @@
+-
+  name: Play to test rebooting Windows hosts
+  hosts: windows
+  tasks:
+
+    - name: Reboots Windows
+      win_reboot:
+        reboot_timeout_sec: 3600
+        connect_timeout_sec: 3600
+        shutdown_timeout_sec: 3600
+
+
+    - name: Makes Directory after reboot
+      win_shell: |
+       mkdir C:\Users\admin\Desktop\afterReboot
+
+    - name: Installs Notepad++ and Atom
+      win_chocolatey:
+        name: '{{item}}'
+        state: present
+      loop:
+        - notepadplusplus.install
+        - atom

@@ -1,0 +1,109 @@
+-
+  name: Play to test computer setup.
+  hosts: windows
+
+  #Initial user Information
+  #TODO: Add other variables like dommain, host, etc
+  vars_prompt:
+    - name: domain_user
+      prompt: "Enter Domain users username: "
+      private: no
+    - name: domain_password
+      prompt: "Enter domain password: "
+      unsafe: yes
+      private: yes
+
+#Variables
+  vars:
+    installers: '/home/ansiadmin/Ansible/Installers/'
+    desktop: 'C:\Users\admin\Desktop\'
+  tasks:
+
+#Renames computer
+    - name: rename computer
+      win_shell: |
+          #-----Variables----
+          $computer = "random"
+          $oldname = $env:computername
+          Write-Host "=========== Renaming Computer =========="
+          Rename-Computer -ComputerName $oldname -NewName $computer
+          write-host "Name has been changed to: $computer"
+          write-host
+
+#Connect to vpn
+
+#Join domain here or after reboot #Credentials will be store in variable files
+    - name: "Join Domain"
+      win_domain_membership:
+        dns_domain:membership: #domain
+        hostname: ###
+        domain_admin_user: #admin
+        domain_admin_password: #PW
+        domain_ou_path: ##
+        state: domain
+      register: domain_state
+
+      win_reboot:
+        when: domain_state.reboot_required
+
+
+#Transfers msi installer to desktop
+#TODO: transfer other Documents
+    - name: Copy files to windows
+      win_copy:
+        src: '{{ installers }}'
+        dest: '{{ desktop }}'
+
+#Install MSI applications
+#TODO: Figure out if it should be installed here or at domain account
+    - name: Install Default Applications
+      win_shell:
+        $chromepath = "C:\Users\admin\Desktop\Installers\googlechromestandaloneenterprise64"
+        $firefoxpath = "C:\Users\admin\Desktop\Installers\Firefox Setup 97.0.1"
+
+        Write-Host "------------Installing Chrome and Firefox---------"
+        try{
+        Start-Process msiexec.exe -Wait -ArgumentList '/I $firefoxpath /quiet'
+        Start-Process msiexec.exe -Wait -ArgumentList '/I $chromepath /quiet'
+        }
+        catch
+        {write-host "something went wrong"}
+
+        write-host "Done with Installations"
+
+
+    - name: reboot Computer
+      win_reboot:
+        reboot_timeout_sec: 3600
+        connect_timeout_sec: 3600
+        shutdown_timeout_sec: 3600
+#SIgn in to admin
+#TODO: Test
+    - name: Set autologon for local admin account with a limited logon count
+      community.windows.win_auto_logon:
+        username: Local admin
+        password: {{ adminpw }}
+        logon_count: 1
+
+#starts vpn
+#TODO:need to figure out how
+    - name: Start Global Protect
+
+#Runs powershell command to cache domain account
+#TODO:
+    - name: cache domain account
+# Reboot and log  in on domain account
+
+#Windows updates
+- name: Checks for Windows updates
+  win_updates:
+      category_names:
+        - Applications
+        - CriticalUpdates
+        - DefinitionUpdates
+        - SecurityUpdates
+        - Updates
+      reboot: yes
+      reboot_timeout: 420
+
+#Any other msi install (Trend Micro, Office)

@@ -1,0 +1,2 @@
+Enable start up items (VPN):
+https://devblogs.microsoft.com/powershell/how-to-access-or-modify-startup-items-in-the-window-registry/

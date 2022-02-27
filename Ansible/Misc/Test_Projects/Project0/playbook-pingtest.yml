@@ -1,0 +1,14 @@
+-
+  name: Test connectivity for Linux Servers
+  hosts: group2
+  tasks:
+          - name: Ping test on Linux
+            ping:
+
+
+-
+  name: Test Connectivity on Windows Server
+  hosts: windows
+  tasks:
+          - name: Ping Test on Windows
+            win_ping:

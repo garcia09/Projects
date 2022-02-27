@@ -1,0 +1,17 @@
+-
+  name: Play to test windows commands
+  hosts: windows
+  tasks:
+    - name: Gets Ip address
+      win_command: ipconfig
+      register: output
+
+    - debug: var=output
+
+
+
+
+    - name: Stops Windows Update
+      win_service:
+       name: wuauserv
+       state: stopped

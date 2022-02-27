@@ -1,0 +1,45 @@
+-
+  name: Play to test running powershell Script and installing Firefox
+  hosts: windows
+  vars:
+    location: '/home/ansiadmin/testProject/Project4/rename.ps1'
+    firefoxInstaller: 'https://download-installer.cdn.mozilla.net/pub/firefox/releases/89.0.2/win64/en-US/Firefox%20Setup%2089.0.2.msi'
+    installPath: 'C:\Users\admin\Desktop\AnsibleInstallers\'
+  tasks:
+  #  - name: Runs powershell Script
+  #    script: '{{ location }}'
+
+    - name: rename computer
+      win_shell: |
+          #-----Variables----
+          $computer = "Luffy"
+          $oldname = $env:computername
+          Write-Host "=========== Renaming Computer =========="
+          Rename-Computer -ComputerName $oldname -NewName $computer
+          write-host "Name has been changed to: $computer"
+          write-host
+          write-host "=========== Checking for updates=========="
+          Install-Module PSWindowsUpdate #imports the Windows Update module in PowerShell.
+          $updates = "Critical Updates" , "Security Updates"
+          Get-WUInstall -AcceptAll -Verbose -IgnoreReboot -Category $updates
+          Get-WindowsUpdate #Checks for updates
+          Install-WindowsUpdate #installs the available updates.
+
+
+
+    - name: Gets Firefox Install path
+      win_file:
+        path: '{{installPath}}'
+        state: directory
+    - name: downloads Firefox installer
+      win_get_url:
+        url: '{{ firefoxInstaller }}'
+        dest: '{{ installPath }}'
+
+    - name: Installs Firefox MSI
+      win_package:
+       path: 'C:\Users\admin\Desktop\AnsibleInstallers\Firefox Setup 89.0.2.msi'
+       state: present
+       arguments:
+          - /install
+          - /passive

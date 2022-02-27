@@ -1,0 +1,20 @@
+#Ubuntu Hosts
+target1 ansible_host=10.0.0.91 ansible_user=client ansible_ssh_pass=Client123
+target2 ansible_host=10.0.0.82 ansible_user=client ansible_ssh_pass=Client123
+target3 ansible_host=client@10.0.0.91
+target4 ansible_host=client@10.0.0.82
+#Windows Hosts
+target5 ansible_host=10.0.0.143 ansible_connection=winrm ansible_user=admin ansible_password=Client123 ansible_winrm_server_cert_validation=ignore
+
+
+[group1]
+target1
+target2
+
+[group2]
+target3
+target4
+
+
+[windows]
+target5

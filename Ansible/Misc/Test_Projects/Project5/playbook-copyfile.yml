@@ -1,0 +1,8 @@
+-
+  name: Copy Files to Linux Servers
+  hosts: group2
+  tasks:
+    - name: Copy Files
+      copy:
+        src: /home/ansiadmin/Projects/Bitcoin/Blockchain.txt
+        dest: /home/client/Naruto/Weebs/
