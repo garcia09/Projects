@@ -28,7 +28,7 @@ do
       echo "Unable to install $1"
       break
     else
-      curl "sucessful"
+      echo "sucessful"
   fi
 done
 
